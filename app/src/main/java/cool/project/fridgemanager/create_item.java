@@ -412,5 +412,4 @@ public class create_item extends AppCompatActivity {
                 + String.valueOf(monthOfYear + 1) + "/"
                 + String.valueOf(dayOfMonth);
     }
-
 }

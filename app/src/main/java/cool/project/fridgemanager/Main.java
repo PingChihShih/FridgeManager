@@ -23,6 +23,7 @@ public class Main extends AppCompatActivity {
 
     List<Map<String, Object>> mMapList;
     SimpleAdapter mSimpleAdapter;
+    private ArrayList<Item> items = new ArrayList<>();
     private Integer[] itemImage = { R.drawable.img_not_found };
     private String[] itemName = { "高椰菜", "花麗菜", "豬舌", "牛頭皮", "未知食品" };
     private String[] itemTag= { "青菜", "青菜", "肉", "肉", "未知" };
@@ -35,17 +36,11 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        /* [TEST] Create Data: Name & Tag */
-
         ItemDB itemDB = new ItemDB(this);
-        ArrayList<ArrayList<String>> a = itemDB.getFullData();
-
+        //ArrayList<ArrayList<String>> a = itemDB.getFullData();
+        items = itemDB.getItems();
+//        itemDB.clear();
         mGridView = findViewById(R.id.item_grid);
-
-//        EditText mName = findViewById(R.id.enter_name);
-//        EditText mTag = findViewById(R.id.enter_tag);
-//        Button create_data  = findViewById(R.id.create_data);
-//        Button clear_data  = findViewById(R.id.clear_data);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
@@ -55,30 +50,32 @@ public class Main extends AppCompatActivity {
 
         gridViewUpdate(itemDB);
 
-//        create_data.setOnClickListener(view -> {
-//            itemDB.add(mName.getText().toString(), mTag.getText().toString());
-//            mName.setText("");
-//            mTag.setText("");
-//
-//            gridViewUpdate(itemDB);
-//        });
-//        clear_data.setOnClickListener(view -> {
-//            itemDB.clear();
-//
-//            gridViewUpdate(itemDB);
-//        });
-
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        recreate();
+//    }
 
     private void gridViewUpdate(ItemDB itemDB){
         mMapList = new ArrayList<>();
-        for (int i = 0; i < itemName.length; i++) {
+//        for (int i = 0; i < itemName.length; i++) {
+//            Map<String, Object> item = new HashMap<>();
+//            item.put("img", itemImage[0]);
+//            item.put("name", itemName[i]);
+//            item.put("tag", itemTag[i]);
+//            item.put("put_date", itemPutDate[i]);
+//            item.put("remained_days", itemRemainedDays[i].toString());
+//            mMapList.add(item);
+//        }
+        for (int i = 0; i < items.size(); i++) {
             Map<String, Object> item = new HashMap<>();
-            item.put("img", itemImage[0]);
-            item.put("name", itemName[i]);
-            item.put("tag", itemTag[i]);
-            item.put("put_date", itemPutDate[i]);
-            item.put("remained_days", itemRemainedDays[i].toString());
+            item.put("name", items.get(i).name);
+            item.put("img", items.get(i).uri);
+            item.put("tag", items.get(i).tag);
+            item.put("put_date", items.get(i).getDateStr());
+            item.put("remained_days", items.get(i).getRemainedDays());
             mMapList.add(item);
         }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,11 +13,13 @@ import java.util.Locale;
 
 public class ItemDB {
     private SQLiteDatabase db;
+    Context context;
     final String TABLE_NAME = "Item"; //資料表的名稱
     final int MAX_LENGTH = 50; //限制最多幾筆資料
 
     //建構子
-    public ItemDB(Context context){
+    public ItemDB(Context c){
+        context = c;
         DBHelper dbHelper = new DBHelper(context);
         db = dbHelper.getWritableDatabase();
     }
@@ -53,8 +56,8 @@ public class ItemDB {
         if(name != "") values.put("name", name);
         if(uri != "") values.put("uri", uri);
         if(tag != "") values.put("tag", tag);
-        if(putdate != null) values.put("putdate", getDateTime(putdate));
-        if(duedate != null) values.put("duedate", getDateTime(duedate));
+        if(putdate != null) values.put("put_date", getDateTime(putdate));
+        if(duedate != null) values.put("due_date", getDateTime(duedate));
         db.insert(TABLE_NAME, null, values);
     }
 
@@ -75,6 +78,28 @@ public class ItemDB {
             for(int i = 1; i <= 6; i++) {
                 tmp.add(cursor.getString(i));
             }
+            result.add(tmp);
+        }
+        cursor.close();
+        return result;
+    }
+
+    public ArrayList<Item> getItems() {
+        ArrayList<Item> result = new ArrayList<>();
+        String orderBy = "timestamp DESC";
+        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, orderBy);
+        while (cursor.moveToNext()) {
+            Item tmp = new Item(context);
+            System.out.println("****************************");
+            System.out.println(cursor.getString(1));
+            System.out.println(cursor.getString(2));
+            System.out.println(cursor.getString(3));
+            System.out.println(cursor.getString(4));
+            System.out.println(cursor.getString(5));
+            System.out.println(cursor.getString(6));
+            System.out.println("****************************");
+            tmp.setValues(cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                            cursor.getString(4), cursor.getString(5));
             result.add(tmp);
         }
         cursor.close();
