@@ -18,6 +18,7 @@ public class Item {
     /* Field */
     Context context = null;
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    int id;
     String name = "";
     Uri uri;
     String tag = "";
@@ -29,6 +30,10 @@ public class Item {
     public Item(Context c) {
         context = c;
         uri = getUriToDrawable(context, R.drawable.img_not_found);
+    }
+
+    public void setId(String stringid){
+        id = Integer.parseInt(stringid);
     }
 
     public void setValues(String n, Uri u, String t, Date pd, Date dd){
@@ -71,13 +76,12 @@ public class Item {
     }
 
     public String getDateStr() {
-        String ret = "";
         Calendar cal = Calendar.getInstance();
         if(putdate == null)
             return "unknown";
         cal.setTime(putdate);
-        ret = Integer.toString(cal.get(Calendar.YEAR))
-                + Integer.toString(cal.get(Calendar.MONTH))
+        String ret = Integer.toString(cal.get(Calendar.YEAR)) + "-"
+                + Integer.toString(cal.get(Calendar.MONTH)) + "-"
                 + Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
         return ret;
     }
@@ -87,6 +91,9 @@ public class Item {
             return "? days";
         Date now = new Date(System.currentTimeMillis());
         int days = (int) getDateDiff(duedate, now, TimeUnit.DAYS);
+
+        String tmp = "";
+
         switch (days){
             case 1:
                 return "1 day";

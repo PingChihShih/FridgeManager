@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.ArrayAdapter;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -100,6 +101,7 @@ public class ItemDB {
             System.out.println("****************************");
             tmp.setValues(cursor.getString(1), cursor.getString(2), cursor.getString(3),
                             cursor.getString(4), cursor.getString(5));
+            tmp.setId(cursor.getString(0));
             result.add(tmp);
         }
         cursor.close();

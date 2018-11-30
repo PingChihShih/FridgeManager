@@ -58,6 +58,7 @@ public class Main extends AppCompatActivity {
 //        recreate();
 //    }
 
+
     private void gridViewUpdate(ItemDB itemDB){
         mMapList = new ArrayList<>();
 //        for (int i = 0; i < itemName.length; i++) {
