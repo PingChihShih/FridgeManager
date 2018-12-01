@@ -1,20 +1,16 @@
 package cool.project.fridgemanager;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +26,7 @@ public class Main extends AppCompatActivity {
     private String[] itemPutDate = { "11/3/18", "11/1/18", "10/28/18", "10/31/18", "?/?/??" };
     private Integer[] itemRemainedDays = { 3, 5, 20, 12, 0 };
     GridView mGridView;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,30 +34,33 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.main);
 
         ItemDB itemDB = new ItemDB(this);
-        //ArrayList<ArrayList<String>> a = itemDB.getFullData();
-        items = itemDB.getItems();
 //        itemDB.clear();
         mGridView = findViewById(R.id.item_grid);
+        mSwipeRefreshLayout = findViewById(R.id.swiperefresh);
+
+        Button clear = findViewById(R.id.clear);
+        clear.setOnClickListener(view -> {
+            itemDB.clear();
+            gridViewUpdate(itemDB);
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             startActivity(new Intent(Main.this, create_item.class));
-            //Toast.makeText(this, "Nothing happened!", Toast.LENGTH_LONG).show();
         });
 
         gridViewUpdate(itemDB);
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            gridViewUpdate(itemDB);
+            new Handler().postDelayed(() -> mSwipeRefreshLayout.setRefreshing(false), 1000);
+
+        });
 
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        recreate();
-//    }
-
-
     private void gridViewUpdate(ItemDB itemDB){
         mMapList = new ArrayList<>();
+        items = itemDB.getItems();
 //        for (int i = 0; i < itemName.length; i++) {
 //            Map<String, Object> item = new HashMap<>();
 //            item.put("img", itemImage[0]);
